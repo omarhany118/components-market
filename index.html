@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>[hidden]{display:none!important}</style>
+<title>Components Market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap">
+<style>
+/* Layout: navy app bar, a grey band holding the gradient role card, then one centred column (max 720px) that swaps between Buyer and Seller. Single light look, matching the university app. */
+:root {
+  --navy: #13275A;
+  --navy-ink: #13235B;
+  --gold: #E5B565;
+  --bell: #F6B23C;
+  --band: #E4E8F0;
+  --ground: #FBF7F6;
+  --card: #FFFFFF;
+  --ink: #1F2433;
+  --muted: #4A5068;
+  --orange: #F6A623;
+  --green: #3DBE6E;
+  --blue: #1565C8;
+  --violet: #8E7CC3;
+  --badge: #E5484D;
+  --grad: linear-gradient(20deg, #0F2CA0 0%, #1564B6 55%, #17A2B8 100%);
+  --shadow: 0 2px 10px rgba(19, 35, 91, 0.08);
+  --font: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--ground); }
+body { font-family: var(--font); color: var(--ink); font-size: 15px; line-height: 1.5; min-height: 100%; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--navy); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 8px; }
+
+.wrap { width: 100%; max-width: 720px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--navy); }
+header .wrap { display: flex; align-items: center; gap: 8px; min-height: 64px; padding-block: 8px; }
+.icon-btn { width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; color: #FFFFFF; cursor: pointer; padding: 0; position: relative; text-decoration: none; }
+.mark { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); }
+.mark img { width: 52px; height: 51px; display: block; }
+.brand { flex: 1; min-width: 0; font-size: 19px; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge { position: absolute; top: 5px; right: 5px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--badge); border: 1.5px solid var(--navy); color: #FFFFFF; font-size: 10px; font-weight: 700; line-height: 13px; text-align: center; }
+
+.band { background: var(--band); }
+.band .wrap { padding-block: 20px 24px; }
+.role-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 20px; border-radius: 10px; background: var(--grad); color: #FFFFFF; box-shadow: 0 8px 18px rgba(19, 35, 91, 0.18); }
+.role-card h1 { margin: 0; font-size: clamp(22px, 5vw, 28px); font-weight: 700; line-height: 1.25; text-wrap: balance; }
+.toggle { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; border-radius: 26px; background: rgba(9, 20, 60, 0.35); width: 100%; max-width: 420px; }
+.toggle button { height: 44px; border: 0; border-radius: 22px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; background: transparent; color: #FFFFFF; transition: background 0.15s, color 0.15s; }
+.toggle button[aria-pressed="true"] { background: #FFFFFF; color: var(--navy-ink); }
+
+main .wrap { padding-block: 18px 40px; display: flex; flex-direction: column; gap: 14px; }
+h2 { margin: 0; font-size: 16px; font-weight: 700; color: var(--navy-ink); }
+
+.search { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 16px; border-radius: 23px; background: var(--card); box-shadow: var(--shadow); }
+.search input { border: 0; flex: 1; min-width: 0; font: inherit; font-size: 15px; outline: none; background: transparent; color: var(--ink); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.courses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.course { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); text-decoration: none; min-width: 0; }
+.course strong { display: block; font-size: 14px; line-height: 1.25; }
+.course small { display: block; font-size: 12px; color: var(--muted); }
+.dot { width: 40px; height: 40px; flex: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+.primary { height: 50px; border-radius: 10px; background: var(--navy-ink); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none; }
+
+.option { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); text-decoration: none; }
+.option span.label { flex: 1; font-size: 20px; font-weight: 700; }
+.option .dot { width: 48px; height: 48px; }
+.options { display: grid; gap: 12px; }
+@media (min-width: 640px) { .options { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.page-head { display: flex; align-items: center; gap: 10px; }
+.page-head h1 { margin: 0; font-size: clamp(22px, 5vw, 26px); font-weight: 700; color: var(--navy-ink); }
+.page-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.form { display: grid; gap: 16px; padding: 18px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > span, .field legend { font-size: 14px; font-weight: 700; padding: 0; }
+.field input, .field select { height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid #CBD2E0; background: var(--card); font: inherit; font-size: 15px; color: var(--ink); width: 100%; min-width: 0; }
+.field input:focus, .field select:focus { border-color: var(--blue); outline: 2px solid rgba(21, 101, 200, 0.25); outline-offset: 0; }
+.hint { font-size: 12px; color: var(--muted); }
+.row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+fieldset.field { border: 0; margin: 0; padding: 0; }
+.photo { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; min-height: 150px; border-radius: 10px; border: 2px dashed #9FB3D9; background: #F3F6FD; color: var(--navy-ink); font-weight: 700; cursor: pointer; overflow: hidden; position: relative; text-align: center; padding: 12px; }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #F3F6FD; }
+.photo input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.photo:focus-within { outline: 3px solid var(--gold); outline-offset: 2px; }
+.store { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; background: #EEF4FD; font-size: 14px; }
+.price { display: grid; gap: 4px; padding: 18px; border-radius: 10px; background: var(--grad); color: #FFFFFF; box-shadow: 0 8px 18px rgba(19, 35, 91, 0.18); }
+.price .k { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.9; }
+.price .v { font-size: 34px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.price .n { font-size: 13px; opacity: 0.92; }
+.price-wait { padding: 16px; border-radius: 10px; border: 1.5px dashed #CBD2E0; color: var(--muted); font-size: 14px; text-align: center; }
+.submit { height: 52px; border: 0; border-radius: 10px; background: var(--navy-ink); color: #FFFFFF; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+.submit:disabled { background: #B9C1D3; cursor: not-allowed; }
+.date-btn { height: 46px; padding: 0 12px 0 14px; border-radius: 10px; border: 1px solid #CBD2E0; background: var(--card); font: inherit; font-size: 15px; color: var(--ink); width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; text-align: left; }
+.date-btn[aria-expanded="true"] { border-color: var(--blue); }
+.date-btn .ph { color: var(--muted); }
+.date-btn .cal-ico { width: 32px; height: 32px; flex: none; border-radius: 8px; background: var(--navy-ink); display: flex; align-items: center; justify-content: center; }
+.cal { padding: 14px; border-radius: 10px; border: 1px solid #CBD2E0; background: var(--card); box-shadow: 0 8px 18px rgba(19, 35, 91, 0.12); display: grid; gap: 10px; max-width: 360px; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; }
+.cal-head strong { font-size: 16px; color: var(--navy-ink); }
+.cal-nav { width: 40px; height: 40px; border-radius: 20px; border: 0; background: #EEF4FD; color: var(--navy-ink); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.cal-nav:disabled { opacity: 0.35; cursor: default; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; text-align: center; }
+.cal-grid .wd { font-size: 12px; font-weight: 700; color: var(--muted); padding-block: 4px; }
+.cal-grid button { aspect-ratio: 1; max-width: 100%; border: 0; border-radius: 50%; background: transparent; font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; font-variant-numeric: tabular-nums; }
+.cal-grid button:hover:not(:disabled) { background: #EEF4FD; }
+.cal-grid button:disabled { color: #A3AAB9; cursor: not-allowed; text-decoration: line-through; }
+.cal-grid button.today { box-shadow: inset 0 0 0 1.5px var(--blue); }
+.cal-grid button[aria-pressed="true"] { background: var(--navy-ink); color: #FFFFFF; font-weight: 700; }
+.cal-foot { font-size: 12px; color: var(--muted); }
+.add-btn { height: 48px; border-radius: 10px; border: 2px solid var(--navy-ink); background: var(--card); color: var(--navy-ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.add-btn:disabled { border-color: #CBD2E0; color: #A3AAB9; cursor: not-allowed; }
+.items { display: grid; gap: 10px; }
+.items h3 { margin: 0; font-size: 15px; font-weight: 700; color: var(--navy-ink); display: flex; justify-content: space-between; }
+.items h3 span { color: var(--muted); font-weight: 600; }
+.items ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; background: #F3F6FD; }
+.item img { width: 52px; height: 52px; flex: none; border-radius: 8px; object-fit: cover; background: #E4E8F0; }
+.item .t { flex: 1; min-width: 0; display: grid; }
+.item .t strong { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item .t small { font-size: 12px; color: var(--muted); }
+.item .p { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.item .rm { width: 40px; height: 40px; flex: none; border: 0; border-radius: 20px; background: transparent; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.item .rm:hover { background: #E4E8F0; color: var(--badge); }
+.sep { height: 1px; background: #E4E8F0; }
+.summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 14px 10px; border-radius: 10px; background: var(--navy-ink); color: #FFFFFF; text-align: center; }
+.summary b { display: block; font-size: 20px; color: var(--gold); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.summary span { font-size: 12px; }
+.filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.filters button { flex: none; height: 38px; padding: 0 14px; border-radius: 19px; border: 1px solid #CBD2E0; background: var(--card); font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.filters button[aria-pressed="true"] { background: var(--navy-ink); border-color: var(--navy-ink); color: #FFFFFF; }
+.history { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.hrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 14px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); }
+.hrow strong { font-size: 15px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hrow .amt { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.hrow small { font-size: 12px; color: var(--muted); }
+.pill { justify-self: end; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 13px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.pill.sold { background: #E6F4EC; color: #166534; }
+.pill.listed { background: #E7EEFB; color: #1E40AF; }
+.pill.dropoff { background: #FDF0DC; color: #9A4A06; }
+.pill.faulty { background: #FDE8E8; color: #B42318; }
+.hrow .amt.void { text-decoration: line-through; color: var(--muted); font-weight: 600; }
+.empty { padding: 20px; text-align: center; color: var(--muted); border: 1.5px dashed #CBD2E0; border-radius: 10px; }
+.prow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); }
+.prow .t { display: grid; min-width: 0; }
+.prow .t strong { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prow .t small { font-size: 12px; color: var(--muted); }
+.prow .amt { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.prow .amt small { display: block; font-size: 12px; font-weight: 600; color: var(--muted); }
+.prow .dot { width: 44px; height: 44px; }
+.cart-add { position: relative; width: 44px; height: 44px; flex: none; padding: 0; border-radius: 50%; border: 0; background: var(--navy-ink); color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.cart-add:hover { background: #1F3C8F; }
+.cart-add .badge { top: -4px; right: -4px; background: var(--green); border-color: var(--card); }
+.crow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; padding: 14px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); }
+.crow .t { display: grid; min-width: 0; }
+.crow .t strong { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crow .t small { font-size: 12px; color: var(--muted); }
+.crow .line { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; align-self: center; }
+.crow .ctl { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; }
+.stepper { display: inline-flex; align-items: center; border-radius: 22px; background: #EEF4FD; }
+.stepper button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--navy-ink); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.stepper button:hover { background: #DCE6F8; }
+.stepper output { min-width: 28px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.remove { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 6px; }
+.remove:hover { color: var(--badge); }
+.cart-ico { position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--navy-ink); margin-left: auto; border: 0; background: transparent; cursor: pointer; }
+.cart-ico .badge { border-color: var(--ground); }
+
+.alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.alert { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 14px; border-radius: 10px; background: var(--card); box-shadow: var(--shadow); text-decoration: none; }
+.alert.unread { background: #F3F6FD; box-shadow: inset 3px 0 0 var(--blue), var(--shadow); }
+.alert .dot { width: 40px; height: 40px; }
+.alert .t { display: grid; gap: 2px; min-width: 0; }
+.alert .t strong { font-size: 15px; }
+.alert .t span { font-size: 14px; color: var(--ink); }
+.alert .t small { font-size: 12px; color: var(--muted); }
+.alert .ud { width: 10px; height: 10px; border-radius: 50%; background: var(--blue); margin-top: 6px; }
+.pop-bg { position: fixed; inset: 0; z-index: 20; background: rgba(9, 20, 60, 0.35); }
+.pop { position: fixed; z-index: 21; top: calc(env(safe-area-inset-top, 0px) + 68px); right: max(16px, env(safe-area-inset-right, 0px)); width: min(400px, calc(100% - 32px)); max-height: calc(100% - env(safe-area-inset-top, 0px) - 88px); display: flex; flex-direction: column; border-radius: 14px; background: var(--ground); box-shadow: 0 16px 40px rgba(9, 20, 60, 0.3); overflow: hidden; }
+@media (min-width: 752px) { .pop { right: calc((100% - 720px) / 2 + 16px); } }
+.pop::before { content: ""; position: absolute; top: -7px; right: 18px; width: 14px; height: 14px; background: var(--navy); transform: rotate(45deg); }
+.pop-head { position: relative; display: flex; align-items: center; gap: 8px; padding: 12px 8px 12px 16px; background: var(--navy); color: #FFFFFF; }
+.pop-head h2 { color: #FFFFFF; font-size: 17px; flex: 1; }
+.pop-head .link-btn { color: var(--gold); margin-left: 0; }
+.pop-head .link-btn:disabled { color: #8E9BBE; }
+.pop-sub { padding: 10px 16px 0; font-size: 13px; color: var(--muted); }
+.pop .alerts { overflow-y: auto; padding: 10px 12px 14px; }
+.link-btn { border: 0; background: transparent; color: var(--blue); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; height: 40px; padding: 0 4px; margin-left: auto; }
+.link-btn:disabled { color: var(--muted); cursor: default; }
+.done { display: grid; gap: 8px; padding: 18px; border-radius: 10px; background: #E6F4EC; color: #14532D; }
+.done strong { font-size: 18px; }
+
+footer { color: var(--muted); font-size: 12px; text-align: center; }
+footer .wrap { padding-block: 0 24px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--navy-ink); color: #FFFFFF; padding: 10px 16px; border-radius: 10px; font-size: 14px; box-shadow: 0 8px 18px rgba(19, 35, 91, 0.25); max-width: calc(100% - 32px); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header>
+  <div class="wrap">
+    <a class="icon-btn" href="#" id="back" aria-label="Back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+    </a>
+    <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>
+    <span class="brand">Components Market</span>
+    <button class="icon-btn" type="button" id="bell" aria-label="Notifications, 2 new">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="var(--bell)" aria-hidden="true"><path d="M12 2.5a1.5 1.5 0 0 1 1.5 1.5v.6A6 6 0 0 1 18 10.5v4l2 2.5v1H4v-1l2-2.5v-4a6 6 0 0 1 4.5-5.9V4A1.5 1.5 0 0 1 12 2.5z"/><path d="M9.5 19.5h5a2.5 2.5 0 0 1-5 0z"/></svg>
+      <span class="badge">2</span>
+    </button>
+  </div>
+</header>
+
+<div class="band" id="band">
+  <div class="wrap">
+    <section class="role-card">
+      <h1>What brings you here today?</h1>
+      <div class="toggle" role="group" aria-label="Choose your role">
+        <button type="button" id="pick-buyer" aria-pressed="true">I'm buying</button>
+        <button type="button" id="pick-seller" aria-pressed="false">I'm selling</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<main>
+  <div class="wrap" id="buyer">
+    <div style="display: grid; gap: 2px">
+      <h2>Shop by your courses</h2>
+      <span class="hint">Your registered courses this semester</span>
+    </div>
+    <div class="courses">
+      <a class="course" href="#ee201"><span class="dot" style="background: var(--blue)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span><span><strong>EE201 Circuits</strong><small>6 parts</small></span></a>
+      <a class="course" href="#cs210"><span class="dot" style="background: var(--orange)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span><span><strong>CS210 MCUs</strong><small>8 parts</small></span></a>
+    </div>
+    <a class="primary" href="#browse">Browse all parts</a>
+  </div>
+
+  <div class="wrap" id="seller" hidden>
+    <h2>What do you want to do?</h2>
+    <div class="options">
+      <a class="option" href="#sell">
+        <span class="dot" style="background: var(--orange)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+        <span class="label">Sell Components</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+      </a>
+      <a class="option" href="#sold">
+        <span class="dot" style="background: var(--green)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6l1 2h3v15H5V6h3z"/><path d="m9 13 2 2 4-4"/></svg></span>
+        <span class="label">Components Sold</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap" id="sell" hidden>
+    <div class="page-head">
+      <a class="icon-btn" href="#seller" aria-label="Back to seller options" style="color: var(--navy-ink); margin-left: -10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      </a>
+      <div>
+        <h1>Sell Components</h1>
+        <p>Tell us what you're bringing. We price it from our components list.</p>
+      </div>
+    </div>
+
+    <form class="form" id="sell-form" novalidate>
+      <label class="photo" id="photo-box">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <span>Add a photo of the component</span>
+        <span class="hint">JPG or PNG</span>
+        <input type="file" id="photo" accept="image/*">
+        <img id="photo-preview" alt="Your component photo" hidden>
+      </label>
+
+      <label class="field">
+        <span>Component name</span>
+        <input type="text" id="name" list="components" placeholder="Start typing, e.g. Arduino Uno" autocomplete="off">
+        <datalist id="components"></datalist>
+        <span class="hint">Pick from the list so we can find its price.</span>
+      </label>
+
+      <label class="field">
+        <span>Category</span>
+        <select id="category">
+          <option value="">Choose a category</option>
+        </select>
+      </label>
+
+      <button type="button" class="add-btn" id="add-btn" disabled><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span id="add-label">Add component</span></button>
+
+      <div class="items" id="items-wrap" hidden>
+        <h3>Components to drop off <span id="items-count"></span></h3>
+        <ul id="items"></ul>
+      </div>
+
+      <div class="sep"></div>
+
+      <fieldset class="field">
+        <legend>Drop-off at the store</legend>
+        <div class="row2">
+          <div class="field"><span class="hint" id="date-label">Date</span>
+            <button type="button" class="date-btn" id="date-btn" aria-expanded="false" aria-controls="cal" aria-labelledby="date-label date-text"><span id="date-text" class="ph">Pick a date</span><span class="cal-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></button>
+            <input type="hidden" id="date">
+          </div>
+          <label class="field"><span class="hint">Time</span>
+            <select id="time">
+              <option value="">Choose a time</option>
+              <option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
+            </select>
+          </label>
+        </div>
+        <div class="cal" id="cal" hidden>
+          <div class="cal-head">
+            <button type="button" class="cal-nav" id="cal-prev" aria-label="Previous month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+            <strong id="cal-month" aria-live="polite"></strong>
+            <button type="button" class="cal-nav" id="cal-next" aria-label="Next month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <span class="cal-foot">The store is open Sunday to Thursday.</span>
+        </div>
+        <div class="store">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy-ink)" stroke-width="2" style="flex: none; margin-top: 2px" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span><strong>Components Market store</strong><br>[Store location on campus] · Sun–Thu, 10 AM–4 PM</span>
+        </div>
+      </fieldset>
+
+      <div id="price-wait" class="price-wait">Add at least one component and pick a drop-off date and time to see your expected price.</div>
+      <div id="price" class="price" hidden aria-live="polite">
+        <span class="k">Total price</span>
+        <span class="v" id="price-value">0 EGP</span>
+      </div>
+
+      <button class="submit" type="submit" id="submit" disabled>Confirm drop-off</button>
+    </form>
+
+    <div class="done" id="done" hidden role="status">
+      <strong>Drop-off booked</strong>
+      <span id="done-text"></span>
+      <button type="button" class="add-btn" id="more-btn" style="margin-top: 6px; background: transparent"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add more components</button>
+      <a href="#seller" style="font-weight: 700; text-align: center; padding-block: 6px">Back to seller options</a>
+    </div>
+  </div>
+  <div class="wrap" id="browse" hidden>
+    <div class="page-head">
+      <a class="icon-btn" href="#buyer" aria-label="Back to buyer options" style="color: var(--navy-ink); margin-left: -10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      </a>
+      <div>
+        <h1 id="browse-title">All parts</h1>
+        <p id="browse-sub">Checked components available at the store.</p>
+      </div>
+      <button type="button" class="cart-ico" id="cart-ico" aria-label="Cart, 0 items"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h11L21 8H7"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/></svg><span class="badge" id="cart-badge" hidden>0</span></button>
+    </div>
+    <label class="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="sr">Search parts</span>
+      <input type="search" id="search" placeholder="What part are you looking for?" autocomplete="off">
+    </label>
+    <div class="filters" role="group" aria-label="Filter by category" id="cat-filters"></div>
+    <span class="hint" id="browse-count"></span>
+    <ul class="history" id="parts"></ul>
+  </div>
+
+  <div class="wrap" id="cart" hidden>
+    <div class="page-head">
+      <a class="icon-btn" href="#browse" aria-label="Back to all parts" style="color: var(--navy-ink); margin-left: -10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      </a>
+      <div>
+        <h1>Your cart</h1>
+        <p id="cart-sub">Pick up and pay at the store.</p>
+      </div>
+    </div>
+
+    <div id="cart-empty" class="empty" hidden>Your cart is empty. <a href="#browse" style="font-weight: 700">Browse all parts</a></div>
+
+    <div id="cart-full" style="display: grid; gap: 14px">
+      <ul class="history" id="cart-items"></ul>
+
+      <div class="form">
+        <fieldset class="field">
+          <legend>Pick up at the store</legend>
+          <div class="row2">
+            <div class="field"><span class="hint" id="pick-label">Date</span>
+              <button type="button" class="date-btn" id="pick-btn" aria-expanded="false" aria-controls="pick-cal" aria-labelledby="pick-label pick-text"><span id="pick-text" class="ph">Pick a date</span><span class="cal-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></button>
+              <input type="hidden" id="pick-day">
+            </div>
+            <label class="field"><span class="hint">Time</span>
+              <select id="pick-time"><option value="">Choose a time</option><option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option></select>
+            </label>
+          </div>
+          <div class="cal" id="pick-cal" hidden>
+            <div class="cal-head">
+              <button type="button" class="cal-nav" id="pick-prev" aria-label="Previous month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+              <strong id="pick-month" aria-live="polite"></strong>
+              <button type="button" class="cal-nav" id="pick-next" aria-label="Next month"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+            </div>
+            <div class="cal-grid" id="pick-grid"></div>
+            <span class="cal-foot">The store is open Sunday to Thursday.</span>
+          </div>
+        </fieldset>
+        <div class="price" aria-live="polite">
+          <span class="k">Total price</span>
+          <span class="v" id="cart-sum">0 EGP</span>
+        </div>
+        <button type="button" class="submit" id="place" disabled>Place order</button>
+      </div>
+    </div>
+
+    <div class="done" id="order-done" hidden role="status">
+      <strong>Order placed</strong>
+      <span id="order-text"></span>
+      <a href="#browse" style="font-weight: 700; text-align: center; padding-block: 6px">Keep browsing</a>
+    </div>
+  </div>
+
+  <div class="wrap" id="sold" hidden>
+    <div class="page-head">
+      <a class="icon-btn" href="#seller" aria-label="Back to seller options" style="color: var(--navy-ink); margin-left: -10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
+      </a>
+      <div>
+        <h1>Components Sold</h1>
+        <p>Everything you've brought to the store, and where it is now.</p>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div><b id="sum-earned">0 EGP</b><span>Earned</span></div>
+      <div><b id="sum-listed">0</b><span>Waiting to be sold</span></div>
+      <div><b id="sum-drop">0</b><span>Waiting drop-off</span></div>
+      <div><b id="sum-faulty">0</b><span>Failed inspection</span></div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter by status" id="filters"></div>
+    <ul class="history" id="history"></ul>
+  </div>
+</main>
+
+<div class="pop-bg" id="pop-bg" hidden></div>
+<section class="pop" id="alerts" role="dialog" aria-modal="true" aria-labelledby="alerts-title" hidden>
+  <div class="pop-head">
+    <h2 id="alerts-title">Notifications</h2>
+    <button type="button" class="link-btn" id="mark-read">Mark all as read</button>
+    <button type="button" class="icon-btn" id="pop-close" aria-label="Close notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <p class="pop-sub" id="alerts-sub" style="margin: 0">Updates on your parts and orders.</p>
+  <ul class="alerts" id="alert-list"></ul>
+</section>
+
+<footer><div class="wrap">Student project prototype · Senior Hardware Waste</div></footer>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function () {
+  var buyerBtn = document.getElementById('pick-buyer');
+  var sellerBtn = document.getElementById('pick-seller');
+  var buyer = document.getElementById('buyer');
+  var seller = document.getElementById('seller');
+  var toast = document.getElementById('toast');
+  var timer;
+
+  function show(role) {
+    var isSeller = role === 'seller';
+    buyerBtn.setAttribute('aria-pressed', String(!isSeller));
+    sellerBtn.setAttribute('aria-pressed', String(isSeller));
+    buyer.hidden = isSeller;
+    seller.hidden = !isSeller;
+  }
+  function say(text) {
+    toast.textContent = text;
+    toast.hidden = false;
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.hidden = true; }, 2200);
+  }
+  var band = document.getElementById('band');
+  var sell = document.getElementById('sell');
+  var soldView = document.getElementById('sold');
+  var browseView = document.getElementById('browse');
+  var cartView = document.getElementById('cart');
+  var pop = document.getElementById('alerts');
+  var popBg = document.getElementById('pop-bg');
+  function openPop(open) {
+    pop.hidden = !open; popBg.hidden = !open;
+    document.getElementById('bell').setAttribute('aria-expanded', String(open));
+    if (open) { drawAlerts(); document.getElementById('pop-close').focus(); } else { document.getElementById('bell').focus(); }
+  }
+  function fromHash() {
+    var onSell = location.hash === '#sell';
+    var onSold = location.hash === '#sold';
+    currentCourse = COURSES[location.hash.slice(1)] || null;
+    var onBrowse = location.hash === '#browse' || !!currentCourse;
+    var onCart = location.hash === '#cart';
+    sell.hidden = !onSell;
+    soldView.hidden = !onSold;
+    browseView.hidden = !onBrowse;
+    cartView.hidden = !onCart;
+    band.hidden = onSell || onSold || onBrowse || onCart;
+    if (onSold) drawHistory();
+    if (onBrowse) {
+      document.getElementById('browse-title').textContent = currentCourse ? currentCourse.title : 'All parts';
+      document.getElementById('browse-sub').textContent = currentCourse ? 'Parts you need for this course, checked by the store.' : 'Checked components available at the store.';
+      catFilter = 'All'; searchIn.value = '';
+      drawParts();
+    }
+    if (onCart) drawCartPage();
+    if (onSell || onSold || onBrowse || onCart) { buyer.hidden = true; seller.hidden = true; window.scrollTo(0, 0); return; }
+    show(location.hash === '#seller' ? 'seller' : 'buyer');
+  }
+
+  // Sample list of actual prices (EGP). The real one comes from the store's components database.
+  // The student is offered RATE of the actual price.
+  var RATE = 0.5;
+  var DB = [
+    { name: 'Arduino Uno R3', cat: 'Microcontrollers', price: 450 },
+    { name: 'Arduino Nano', cat: 'Microcontrollers', price: 220 },
+    { name: 'ESP32 DevKit', cat: 'Microcontrollers', price: 380 },
+    { name: 'Raspberry Pi 4 (4GB)', cat: 'Microcontrollers', price: 3200 },
+    { name: 'HC-SR04 ultrasonic sensor', cat: 'Sensors', price: 70 },
+    { name: 'DHT11 temperature sensor', cat: 'Sensors', price: 60 },
+    { name: 'IR obstacle sensor', cat: 'Sensors', price: 40 },
+    { name: 'SG90 micro servo', cat: 'Motors & drivers', price: 75 },
+    { name: 'L298N motor driver', cat: 'Motors & drivers', price: 140 },
+    { name: '16x2 LCD with I2C', cat: 'Displays', price: 160 },
+    { name: 'Breadboard 830 points', cat: 'Prototyping', price: 80 },
+    { name: 'Jumper wires (40 pcs)', cat: 'Prototyping', price: 45 },
+    { name: 'Resistor kit (600 pcs)', cat: 'Passives', price: 120 },
+    { name: 'Digital multimeter DT830', cat: 'Tools', price: 250 },
+    { name: 'Soldering iron 60W', cat: 'Tools', price: 300 }
+  ];
+  var cats = [];
+  DB.forEach(function (d) { if (cats.indexOf(d.cat) < 0) cats.push(d.cat); });
+
+  var nameIn = document.getElementById('name');
+  var list = document.getElementById('components');
+  var catIn = document.getElementById('category');
+  var dateIn = document.getElementById('date');
+  var timeIn = document.getElementById('time');
+  var photoIn = document.getElementById('photo');
+  var preview = document.getElementById('photo-preview');
+  var priceBox = document.getElementById('price');
+  var priceWait = document.getElementById('price-wait');
+  var priceValue = document.getElementById('price-value');
+  var submit = document.getElementById('submit');
+  var form = document.getElementById('sell-form');
+  var done = document.getElementById('done');
+  var hasPhoto = false;
+  var items = [];
+  var addBtn = document.getElementById('add-btn');
+  var addLabel = document.getElementById('add-label');
+  var itemsWrap = document.getElementById('items-wrap');
+  var itemsList = document.getElementById('items');
+  var itemsCount = document.getElementById('items-count');
+  var photoBox = document.getElementById('photo-box');
+  function egp(n) { return n.toLocaleString('en-US') + ' EGP'; }
+  function total() { return items.reduce(function (s, it) { return s + it.price; }, 0); }
+  function drawItems() {
+    itemsList.textContent = '';
+    itemsWrap.hidden = items.length === 0;
+    itemsCount.textContent = items.length + (items.length === 1 ? ' item' : ' items');
+    addLabel.textContent = items.length ? 'Add another component' : 'Add component';
+    items.forEach(function (it, i) {
+      var li = document.createElement('li'); li.className = 'item';
+      var img = document.createElement('img'); img.src = it.photo; img.alt = ''; li.appendChild(img);
+      var t = document.createElement('span'); t.className = 't';
+      var s = document.createElement('strong'); s.textContent = it.name; t.appendChild(s);
+      var c = document.createElement('small'); c.textContent = it.cat + ' · actual price ' + egp(it.actual); t.appendChild(c);
+      li.appendChild(t);
+      var p = document.createElement('span'); p.className = 'p'; p.textContent = egp(it.price); li.appendChild(p);
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'rm'; rm.setAttribute('aria-label', 'Remove ' + it.name);
+      rm.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+      rm.addEventListener('click', function () { items.splice(i, 1); drawItems(); update(); });
+      li.appendChild(rm);
+      itemsList.appendChild(li);
+    });
+  }
+
+  DB.forEach(function (d) { var o = document.createElement('option'); o.value = d.name; list.appendChild(o); });
+  cats.forEach(function (c) { var o = document.createElement('option'); o.value = c; o.textContent = c; catIn.appendChild(o); });
+
+  var today = new Date();
+  function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  var dateBtn = document.getElementById('date-btn');
+  var dateText = document.getElementById('date-text');
+  var cal = document.getElementById('cal');
+  var calGrid = document.getElementById('cal-grid');
+  var calMonth = document.getElementById('cal-month');
+  var calPrev = document.getElementById('cal-prev');
+  var calNext = document.getElementById('cal-next');
+  var start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  var view = new Date(start.getFullYear(), start.getMonth(), 1);
+  var lastMonth = new Date(start.getFullYear(), start.getMonth() + 2, 1);
+
+  function drawCal() {
+    calMonth.textContent = view.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    calPrev.disabled = view <= new Date(start.getFullYear(), start.getMonth(), 1);
+    calNext.disabled = view >= lastMonth;
+    calGrid.textContent = '';
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(function (w) {
+      var s = document.createElement('span'); s.className = 'wd'; s.textContent = w; calGrid.appendChild(s);
+    });
+    var first = view.getDay();
+    for (var i = 0; i < first; i++) calGrid.appendChild(document.createElement('span'));
+    var days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    for (var d = 1; d <= days; d++) {
+      var day = new Date(view.getFullYear(), view.getMonth(), d);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = d;
+      var key = iso(day);
+      var closed = day.getDay() === 5 || day.getDay() === 6;
+      b.disabled = day < start || closed;
+      b.setAttribute('aria-label', day.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + (closed ? ', store closed' : ''));
+      if (key === iso(start)) b.className = 'today';
+      b.setAttribute('aria-pressed', String(dateIn.value === key));
+      b.addEventListener('click', (function (k, dt) { return function () { pickDate(k, dt); }; })(key, day));
+      calGrid.appendChild(b);
+    }
+  }
+  function pickDate(key, day) {
+    dateIn.value = key;
+    dateText.textContent = day.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+    dateText.className = '';
+    openCal(false);
+    dateBtn.focus();
+    update();
+  }
+  function openCal(open) {
+    cal.hidden = !open;
+    dateBtn.setAttribute('aria-expanded', String(open));
+    if (open) drawCal();
+  }
+  dateBtn.addEventListener('click', function () { openCal(cal.hidden); });
+  calPrev.addEventListener('click', function () { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); drawCal(); });
+  calNext.addEventListener('click', function () { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); drawCal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !cal.hidden) { openCal(false); dateBtn.focus(); } });
+
+  function match() {
+    var v = nameIn.value.trim().toLowerCase();
+    for (var i = 0; i < DB.length; i++) if (DB[i].name.toLowerCase() === v) return DB[i];
+    return null;
+  }
+  function update() {
+    var m = match();
+    if (m && !catIn.value) catIn.value = m.cat;
+    addBtn.disabled = !(hasPhoto && m && catIn.value);
+    var ready = items.length > 0 && dateIn.value && timeIn.value;
+    priceBox.hidden = !ready;
+    priceWait.hidden = !!ready;
+    submit.disabled = !ready;
+    if (!ready) {
+      priceWait.textContent = (nameIn.value.trim() && !m)
+        ? 'We couldn\'t find that component. Pick a name from the list.'
+        : 'Add at least one component and pick a drop-off date and time to see your expected price.';
+      return;
+    }
+    priceValue.textContent = egp(total());
+  }
+  [nameIn, catIn, dateIn, timeIn].forEach(function (el) { el.addEventListener('input', update); el.addEventListener('change', update); });
+
+  photoIn.addEventListener('change', function () {
+    var f = photoIn.files && photoIn.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { preview.src = r.result; preview.hidden = false; hasPhoto = true; update(); };
+    r.readAsDataURL(f);
+  });
+
+  addBtn.addEventListener('click', function () {
+    var m = match();
+    if (!m || !hasPhoto || !catIn.value) return;
+    items.push({ name: m.name, cat: catIn.value, actual: m.price, price: Math.round(m.price * RATE), photo: preview.src });
+    nameIn.value = ''; catIn.value = ''; photoIn.value = '';
+    preview.hidden = true; preview.removeAttribute('src'); hasPhoto = false;
+    drawItems();
+    update();
+    photoBox.scrollIntoView({ block: 'nearest' });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (submit.disabled) return;
+    var d = new Date(dateIn.value + 'T00:00:00');
+    var when = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    var names = items.map(function (it) { return it.name; }).join(', ');
+    document.getElementById('done-text').textContent = 'Bring your ' + items.length + (items.length === 1 ? ' component' : ' components') + ' (' + names + ') to the store on ' + when + ' at ' + timeIn.value + '. Total price: ' + egp(total()) + '.';
+    items.forEach(function (it) { records.unshift({ name: it.name, price: it.price, status: 'dropoff', date: 'Drop-off ' + when + ', ' + timeIn.value }); });
+    notify({ type: 'dropoff', title: 'Drop-off booked', text: 'Bring your ' + items.length + (items.length === 1 ? ' component' : ' components') + ' to the store on ' + when + ' at ' + timeIn.value + '.', go: 'sold' });
+    form.hidden = true;
+    done.hidden = false;
+  });
+
+  // Example history so the page shows how it works. The real list comes from the store's records.
+  var records = [
+    { name: 'ESP32 DevKit', price: 190, status: 'dropoff', date: 'Drop-off Sun 2 Nov, 11:00 AM' },
+    { name: 'L298N motor driver', price: 70, status: 'listed', date: 'Dropped off 26 Oct' },
+    { name: 'HC-SR04 ultrasonic sensor', price: 35, status: 'listed', date: 'Dropped off 26 Oct' },
+    { name: 'Arduino Uno R3', price: 225, status: 'sold', date: 'Sold 21 Oct' },
+    { name: 'SG90 micro servo', price: 38, status: 'faulty', date: 'Inspected 26 Oct · available for collection at the store' },
+    { name: 'Digital multimeter DT830', price: 125, status: 'sold', date: 'Sold 14 Oct' },
+    { name: 'Breadboard 830 points', price: 40, status: 'sold', date: 'Sold 9 Oct' }
+  ];
+  // Store resale price for buyers: assumed BUY_RATE of the actual price (to be confirmed).
+  var BUY_RATE = 0.7;
+  var STOCK = [3, 2, 4, 1, 6, 5, 2, 7, 3, 2, 9, 12, 4, 2, 1];
+  var CAT_COLOR = { 'Microcontrollers': 'var(--blue)', 'Sensors': 'var(--orange)', 'Motors & drivers': 'var(--green)', 'Displays': 'var(--violet)', 'Prototyping': '#17A2B8', 'Passives': '#B7791F', 'Tools': 'var(--navy-ink)' };
+  var catFilter = 'All';
+  // Example course kits. The real lists come from each course's required parts.
+  var COURSES = {
+    ee201: { title: 'EE201 Circuits', parts: ['Breadboard 830 points', 'Jumper wires (40 pcs)', 'Resistor kit (600 pcs)', 'Digital multimeter DT830', 'Soldering iron 60W', 'DHT11 temperature sensor'] },
+    cs210: { title: 'CS210 MCUs', parts: ['Arduino Uno R3', 'Arduino Nano', 'ESP32 DevKit', 'HC-SR04 ultrasonic sensor', 'IR obstacle sensor', 'SG90 micro servo', 'L298N motor driver', '16x2 LCD with I2C'] }
+  };
+  var currentCourse = null;
+  var searchIn = document.getElementById('search');
+  var partsEl = document.getElementById('parts');
+  var catFiltersEl = document.getElementById('cat-filters');
+  var browseCount = document.getElementById('browse-count');
+  function drawParts() {
+    catFiltersEl.textContent = '';
+    var shownCats = currentCourse ? cats.filter(function (c) { return DB.some(function (d) { return d.cat === c && currentCourse.parts.indexOf(d.name) >= 0; }); }) : cats;
+    ['All'].concat(shownCats).forEach(function (c) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = c;
+      b.setAttribute('aria-pressed', String(catFilter === c));
+      b.addEventListener('click', function () { catFilter = c; drawParts(); });
+      catFiltersEl.appendChild(b);
+    });
+    var q = searchIn.value.trim().toLowerCase();
+    var rows = DB.map(function (d, i) { return { d: d, stock: STOCK[i] || 1 }; }).filter(function (r) {
+      return (!currentCourse || currentCourse.parts.indexOf(r.d.name) >= 0) && (catFilter === 'All' || r.d.cat === catFilter) && (!q || r.d.name.toLowerCase().indexOf(q) >= 0 || r.d.cat.toLowerCase().indexOf(q) >= 0);
+    });
+    browseCount.textContent = rows.length + (rows.length === 1 ? ' part' : ' parts') + (q ? ' matching “' + searchIn.value.trim() + '”' : '');
+    partsEl.textContent = '';
+    if (!rows.length) {
+      var e = document.createElement('li'); e.className = 'empty'; e.textContent = 'No parts match your search. Try another name or category.'; partsEl.appendChild(e); return;
+    }
+    rows.forEach(function (r) {
+      var li = document.createElement('li');
+      var a = document.createElement('div'); a.className = 'prow';
+      var dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = CAT_COLOR[r.d.cat] || 'var(--blue)';
+      dot.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>';
+      a.appendChild(dot);
+      var t = document.createElement('span'); t.className = 't';
+      var s = document.createElement('strong'); s.textContent = r.d.name; t.appendChild(s);
+      var c = document.createElement('small'); c.textContent = r.d.cat; t.appendChild(c);
+      a.appendChild(t);
+      var p = document.createElement('span'); p.className = 'amt'; p.textContent = egp(Math.round(r.d.price * BUY_RATE));
+      a.appendChild(p);
+      var qty = cart[r.d.name] || 0;
+      var add = document.createElement('button'); add.type = 'button';
+      add.className = 'cart-add';
+      add.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>' + (qty ? '<span class="badge">' + qty + '</span>' : '');
+      add.setAttribute('aria-label', qty ? r.d.name + ' in cart: ' + qty + '. Add one more' : 'Add ' + r.d.name + ' to cart');
+      add.addEventListener('click', (function (name) { return function () { cart[name] = (cart[name] || 0) + 1; drawParts(); drawCart(); say('Added ' + name + ' to your cart.'); }; })(r.d.name));
+      a.appendChild(add);
+      li.appendChild(a); partsEl.appendChild(li);
+    });
+  }
+  searchIn.addEventListener('input', drawParts);
+
+  var cart = {};
+  function drawCart() {
+    var n = 0, sum = 0;
+    DB.forEach(function (d) { var q = cart[d.name] || 0; n += q; sum += q * Math.round(d.price * BUY_RATE); });
+    var label = n + (n === 1 ? ' item' : ' items');
+    var badge = document.getElementById('cart-badge');
+    badge.hidden = n === 0; badge.textContent = n;
+    document.getElementById('cart-ico').setAttribute('aria-label', 'Cart, ' + label);
+  }
+  document.getElementById('cart-ico').addEventListener('click', function () { location.hash = 'cart'; });
+
+  function sellPrice(d) { return Math.round(d.price * BUY_RATE); }
+  var cartItemsEl = document.getElementById('cart-items');
+  var pickDay = document.getElementById('pick-day');
+  var pickTime = document.getElementById('pick-time');
+  var placeBtn = document.getElementById('place');
+  (function pickupCalendar() {
+    var btn = document.getElementById('pick-btn');
+    var text = document.getElementById('pick-text');
+    var panel = document.getElementById('pick-cal');
+    var grid = document.getElementById('pick-grid');
+    var month = document.getElementById('pick-month');
+    var prev = document.getElementById('pick-prev');
+    var next = document.getElementById('pick-next');
+    var first = new Date(start.getFullYear(), start.getMonth(), 1);
+    var last = new Date(start.getFullYear(), start.getMonth() + 2, 1);
+    var v = new Date(first);
+    var picked = '';
+    function draw() {
+      month.textContent = v.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+      prev.disabled = v <= first;
+      next.disabled = v >= last;
+      grid.textContent = '';
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(function (w) {
+        var s = document.createElement('span'); s.className = 'wd'; s.textContent = w; grid.appendChild(s);
+      });
+      for (var i = 0; i < v.getDay(); i++) grid.appendChild(document.createElement('span'));
+      var days = new Date(v.getFullYear(), v.getMonth() + 1, 0).getDate();
+      for (var d = 1; d <= days; d++) {
+        var day = new Date(v.getFullYear(), v.getMonth(), d);
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = d;
+        var key = iso(day);
+        var closed = day.getDay() === 5 || day.getDay() === 6;
+        b.disabled = day < start || closed;
+        b.setAttribute('aria-label', day.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + (closed ? ', store closed' : ''));
+        if (key === iso(start)) b.className = 'today';
+        b.setAttribute('aria-pressed', String(picked === key));
+        b.addEventListener('click', (function (k, dt) { return function () {
+          picked = k;
+          pickDay.value = dt.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+          text.textContent = dt.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+          text.className = '';
+          open(false); btn.focus(); drawCartPage();
+        }; })(key, day));
+        grid.appendChild(b);
+      }
+    }
+    function open(o) { panel.hidden = !o; btn.setAttribute('aria-expanded', String(o)); if (o) draw(); }
+    btn.addEventListener('click', function () { open(panel.hidden); });
+    prev.addEventListener('click', function () { v = new Date(v.getFullYear(), v.getMonth() - 1, 1); draw(); });
+    next.addEventListener('click', function () { v = new Date(v.getFullYear(), v.getMonth() + 1, 1); draw(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) { open(false); btn.focus(); } });
+  })();
+  function cartRows() { return DB.filter(function (d) { return cart[d.name] > 0; }); }
+  function drawCartPage() {
+    var rows = cartRows();
+    var n = 0, sum = 0;
+    rows.forEach(function (d) { n += cart[d.name]; sum += cart[d.name] * sellPrice(d); });
+    document.getElementById('order-done').hidden = true;
+    document.getElementById('cart-empty').hidden = rows.length > 0;
+    document.getElementById('cart-full').hidden = rows.length === 0;
+    document.getElementById('cart-sub').textContent = rows.length ? n + (n === 1 ? ' item' : ' items') + ' · pick up and pay at the store' : 'Pick up and pay at the store.';
+    document.getElementById('cart-sum').textContent = egp(sum);
+    placeBtn.disabled = !(rows.length && pickDay.value && pickTime.value);
+    cartItemsEl.textContent = '';
+    rows.forEach(function (d) {
+      var q = cart[d.name];
+      var li = document.createElement('li'); li.className = 'crow';
+      var t = document.createElement('span'); t.className = 't';
+      var s = document.createElement('strong'); s.textContent = d.name; t.appendChild(s);
+      var c = document.createElement('small'); c.textContent = d.cat + ' · ' + egp(sellPrice(d)) + ' each'; t.appendChild(c);
+      li.appendChild(t);
+      var line = document.createElement('span'); line.className = 'line'; line.textContent = egp(q * sellPrice(d)); li.appendChild(line);
+      var ctl = document.createElement('div'); ctl.className = 'ctl';
+      var st = document.createElement('div'); st.className = 'stepper';
+      var minus = document.createElement('button'); minus.type = 'button'; minus.setAttribute('aria-label', 'One less ' + d.name);
+      minus.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>';
+      minus.addEventListener('click', function () { cart[d.name] = Math.max(0, q - 1); drawCart(); drawCartPage(); });
+      var out = document.createElement('output'); out.textContent = q; out.setAttribute('aria-label', 'Quantity');
+      var plus = document.createElement('button'); plus.type = 'button'; plus.setAttribute('aria-label', 'One more ' + d.name);
+      plus.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+      plus.addEventListener('click', function () { cart[d.name] = q + 1; drawCart(); drawCartPage(); });
+      st.appendChild(minus); st.appendChild(out); st.appendChild(plus);
+      ctl.appendChild(st);
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove';
+      rm.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>Remove';
+      rm.addEventListener('click', function () { delete cart[d.name]; drawCart(); drawCartPage(); });
+      ctl.appendChild(rm);
+      li.appendChild(ctl);
+      cartItemsEl.appendChild(li);
+    });
+  }
+  pickDay.addEventListener('change', drawCartPage);
+  pickTime.addEventListener('change', drawCartPage);
+  placeBtn.addEventListener('click', function () {
+    var rows = cartRows(); var n = 0, sum = 0;
+    rows.forEach(function (d) { n += cart[d.name]; sum += cart[d.name] * sellPrice(d); });
+    document.getElementById('order-text').textContent = 'Pick up your ' + n + (n === 1 ? ' item' : ' items') + ' at the store on ' + pickDay.value + ' at ' + pickTime.value + '. Total price: ' + egp(sum) + ', paid at pickup.';
+    notify({ type: 'order', title: 'Order placed', text: 'Pick up your ' + n + (n === 1 ? ' item' : ' items') + ' on ' + pickDay.value + ' at ' + pickTime.value + '. Total ' + egp(sum) + '.', go: 'browse' });
+    cart = {}; drawCart();
+    document.getElementById('cart-full').hidden = true;
+    document.getElementById('cart-sub').textContent = 'Pick up and pay at the store.';
+    document.getElementById('order-done').hidden = false;
+  });
+
+  // Example notifications for the market's features. New ones are added when you book a drop-off or place an order.
+  var ICON = {
+    sold: ['var(--green)', '<path d="m5 12 5 5 9-10"/>'],
+    dropoff: ['var(--orange)', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+    listed: ['var(--blue)', '<path d="M20 12 12 20 4 12V4h8z"/><circle cx="8.5" cy="8.5" r="1.5"/>'],
+    failed: ['var(--badge)', '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/>'],
+    order: ['var(--navy-ink)', '<path d="M3 4h2l2.4 11h11L21 8H7"/><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/>'],
+    course: ['var(--violet)', '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>']
+  };
+  var alerts = [
+    { type: 'sold', title: 'Component sold', text: 'Your Arduino Uno R3 was sold. Collect 225 EGP from the store.', time: '2 hours ago', go: 'sold', unread: true },
+    { type: 'dropoff', title: 'Drop-off reminder', text: 'Bring your ESP32 DevKit to the store on Sunday at 11:00 AM.', time: '5 hours ago', go: 'sold', unread: true },
+    { type: 'listed', title: 'Passed inspection', text: 'Your L298N motor driver passed inspection and is now waiting to be sold.', time: 'Yesterday', go: 'sold', unread: false },
+    { type: 'failed', title: 'Failed inspection', text: 'Your SG90 micro servo did not pass inspection. It is available for collection at the store.', time: 'Yesterday', go: 'sold', unread: false },
+    { type: 'course', title: 'New parts for CS210 MCUs', text: 'An ESP32 DevKit was just added for your course.', time: '2 days ago', go: 'cs210', unread: false },
+    { type: 'order', title: 'Order ready for pickup', text: 'Your order of 2 items is ready. Pay at the store when you collect it.', time: '3 days ago', go: 'browse', unread: false }
+  ];
+  var alertList = document.getElementById('alert-list');
+  function drawBadge() {
+    var n = alerts.filter(function (a) { return a.unread; }).length;
+    var bell = document.getElementById('bell');
+    var badge = bell.querySelector('.badge');
+    badge.textContent = n; badge.hidden = n === 0;
+    bell.setAttribute('aria-label', n ? 'Notifications, ' + n + ' new' : 'Notifications');
+    document.getElementById('mark-read').disabled = n === 0;
+    document.getElementById('alerts-sub').textContent = n ? n + ' new' : 'You’re all caught up.';
+  }
+  function notify(a) { a.unread = true; a.time = 'Just now'; alerts.unshift(a); drawBadge(); }
+  function drawAlerts() {
+    alertList.textContent = '';
+    alerts.forEach(function (a) {
+      var li = document.createElement('li');
+      var el = document.createElement('a'); el.href = '#' + a.go; el.className = a.unread ? 'alert unread' : 'alert';
+      el.addEventListener('click', function () { a.unread = false; drawBadge(); openPop(false); });
+      var ic = ICON[a.type];
+      var dot = document.createElement('span'); dot.className = 'dot'; dot.style.background = ic[0];
+      dot.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ic[1] + '</svg>';
+      el.appendChild(dot);
+      var t = document.createElement('span'); t.className = 't';
+      var s = document.createElement('strong'); s.textContent = a.title; t.appendChild(s);
+      var p = document.createElement('span'); p.textContent = a.text; t.appendChild(p);
+      var m = document.createElement('small'); m.textContent = a.time; t.appendChild(m);
+      el.appendChild(t);
+      var u = document.createElement('span'); if (a.unread) { u.className = 'ud'; u.setAttribute('aria-label', 'Unread'); } el.appendChild(u);
+      li.appendChild(el); alertList.appendChild(li);
+    });
+    drawBadge();
+  }
+
+  var LABEL = { sold: 'Sold', listed: 'Waiting to be sold', dropoff: 'Waiting drop-off', faulty: 'Failed inspection' };
+  var filter = 'all';
+  var filtersEl = document.getElementById('filters');
+  var historyEl = document.getElementById('history');
+  function drawHistory() {
+    var count = { all: records.length, sold: 0, listed: 0, dropoff: 0, faulty: 0 };
+    var earned = 0;
+    records.forEach(function (h) { count[h.status]++; if (h.status === 'sold') earned += h.price; });
+    document.getElementById('sum-earned').textContent = egp(earned);
+    document.getElementById('sum-listed').textContent = count.listed;
+    document.getElementById('sum-drop').textContent = count.dropoff;
+    document.getElementById('sum-faulty').textContent = count.faulty;
+    filtersEl.textContent = '';
+    [['all', 'All'], ['sold', 'Sold'], ['listed', 'Waiting to be sold'], ['dropoff', 'Waiting drop-off'], ['faulty', 'Failed inspection']].forEach(function (f) {
+      var b = document.createElement('button'); b.type = 'button';
+      b.textContent = f[1] + ' (' + count[f[0]] + ')';
+      b.setAttribute('aria-pressed', String(filter === f[0]));
+      b.addEventListener('click', function () { filter = f[0]; drawHistory(); });
+      filtersEl.appendChild(b);
+    });
+    historyEl.textContent = '';
+    var rows = records.filter(function (h) { return filter === 'all' || h.status === filter; });
+    if (!rows.length) {
+      var e = document.createElement('li'); e.className = 'empty'; e.textContent = 'Nothing here yet.'; historyEl.appendChild(e); return;
+    }
+    rows.forEach(function (h) {
+      var li = document.createElement('li'); li.className = 'hrow';
+      var n = document.createElement('strong'); n.textContent = h.name; li.appendChild(n);
+      var a = document.createElement('span'); a.className = h.status === 'faulty' ? 'amt void' : 'amt'; a.textContent = egp(h.price); li.appendChild(a);
+      var d = document.createElement('small'); d.textContent = h.date; li.appendChild(d);
+      var p = document.createElement('span'); p.className = 'pill ' + h.status; p.textContent = LABEL[h.status]; li.appendChild(p);
+      historyEl.appendChild(li);
+    });
+  }
+
+  document.getElementById('more-btn').addEventListener('click', function () {
+    items = [];
+    drawItems();
+    dateIn.value = '';
+    dateText.textContent = 'Pick a date';
+    dateText.className = 'ph';
+    timeIn.value = '';
+    update();
+    done.hidden = true;
+    form.hidden = false;
+    window.scrollTo(0, 0);
+  });
+
+  buyerBtn.addEventListener('click', function () { location.hash = 'buyer'; });
+  sellerBtn.addEventListener('click', function () { location.hash = 'seller'; });
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+
+  document.querySelectorAll('.soon').forEach(function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); say('This screen is coming next.'); });
+  });
+  document.getElementById('bell').addEventListener('click', function () { openPop(pop.hidden); });
+  document.getElementById('pop-close').addEventListener('click', function () { openPop(false); });
+  popBg.addEventListener('click', function () { openPop(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) openPop(false); });
+  document.getElementById('mark-read').addEventListener('click', function () { alerts.forEach(function (a) { a.unread = false; }); drawAlerts(); });
+  drawBadge();
+  document.getElementById('back').addEventListener('click', function (e) {
+    e.preventDefault();
+    if (history.length > 1) history.back(); else say('This is the first screen.');
+  });
+})();
+</script>
+
+</html>
