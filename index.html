@@ -207,9 +207,6 @@ footer .wrap { padding-block: 0 24px; }
 
 <header>
   <div class="wrap">
-    <a class="icon-btn" href="#" id="back" aria-label="Back">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg>
-    </a>
     <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>
     <span class="brand">Components Market</span>
     <button class="icon-btn" type="button" id="bell" aria-label="Notifications, 2 new">
@@ -991,10 +988,6 @@ footer .wrap { padding-block: 0 24px; }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) openPop(false); });
   document.getElementById('mark-read').addEventListener('click', function () { alerts.forEach(function (a) { a.unread = false; }); drawAlerts(); });
   drawBadge();
-  document.getElementById('back').addEventListener('click', function (e) {
-    e.preventDefault();
-    if (history.length > 1) history.back(); else say('This is the first screen.');
-  });
 })();
 </script>
 
